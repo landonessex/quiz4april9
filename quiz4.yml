@@ -6,16 +6,17 @@ trigger:
 
 steps:
 - task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '6.0'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+  inputs:
+    packageType: 'sdk'
+    version: '6.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - script: dotnet build
-  displayName: 'Build Project'
+  displayName: 'Build Project'
 
 - script: dotnet test
-  displayName: 'Run Tests (if any)'
+  displayName: 'Run Tests (if any)'
 
 - script: echo "Database access has already been done on April 14, 2023 by Hao Lac"
-  displayName: 'Display DB Message'
+  displayName: 'Display DB Message'
+
