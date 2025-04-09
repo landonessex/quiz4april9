@@ -1,24 +1,35 @@
-pool:
-  name: MySelfHostedPool
-
 trigger:
-  - main
+- main
+
+pool:
+  name: 'MySelfHostedPool'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
   inputs:
-    packageType: 'sdk'
-    version: '7.0.102'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+    restoreSolution: '$(solution)'
 
-- script: dotnet restore WebApplication1/WebApplication1.sln
-  displayName: 'Restore Dependencies'
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-- script: dotnet build WebApplication1/WebApplication1.sln --no-restore
-  displayName: 'Build Solution'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
 
-- script: dotnet test WebApplication1/WebApplication1.Tests.csproj --no-build
-  displayName: 'Run Tests'
-
-  - script: echo "Database access has already been done on April 14, 2023 by Landon Essex"
-  displayName: 'Display DB Message'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
