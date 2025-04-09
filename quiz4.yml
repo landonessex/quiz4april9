@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: 'MySelfHostedPool'
+  name: 'MySlefHostedPool'
 
 variables:
   solution: '**/*.sln'
@@ -11,12 +11,17 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet tool'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet packages'
   inputs:
-    restoreSolution: '$(solution)'
+    command: 'restore'
+    projects: '$(solution)'
+    feedsToUse: 'select'
 
 - task: VSBuild@1
+  displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
@@ -24,11 +29,13 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: VSTest@2
+  displayName: 'Run tests'
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
