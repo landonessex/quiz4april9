@@ -1,0 +1,21 @@
+pool:
+  name: MySelfHostedPool
+
+trigger:
+  - main
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '6.x.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: dotnet build
+  displayName: 'Build Project'
+
+- script: dotnet test
+  displayName: 'Run Tests (if any)'
+
+- script: echo "Database access has already been done on April 14, 2023 by Hao Lac"
+  displayName: 'Display DB Message'
