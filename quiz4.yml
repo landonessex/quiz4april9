@@ -20,5 +20,5 @@ steps:
 - script: dotnet test WebApplication1/WebApplication1.Tests.csproj --no-build
   displayName: 'Run Tests'
 
-- script: echo "Database access has already been done on April 14, 2023 by Landon Essex"
+  - script: echo "Database access has already been done on April 14, 2023 by Landon Essex"
   displayName: 'Display DB Message'
