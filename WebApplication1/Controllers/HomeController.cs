@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Message = "Database access has already been done on April 14, 2023 by Hao Lac";
+            ViewBag.Message = "Database access has already been done on April 14, 2023 by Landon Essex";
             return View();
         }
 
